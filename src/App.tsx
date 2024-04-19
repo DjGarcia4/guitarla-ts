@@ -3,38 +3,18 @@ import Guitar from "./components/Guitar";
 import { useCart } from "./hooks/useCart";
 
 function App() {
-  const {
-    data,
-    cart,
-    addToCart,
-    deleteItem,
-    handleCant,
-    deleteCart,
-    isEmpty,
-    totalToPay,
-  } = useCart();
+  const { data, addToCart } = useCart();
 
   return (
     <>
-      <Header
-        cart={cart}
-        deleteItem={deleteItem}
-        handleCant={handleCant}
-        deleteCart={deleteCart}
-      />
+      <Header />
 
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
         <div className="row mt-5">
           {data.map((guitar) => (
-            <Guitar
-              key={guitar.id}
-              guitar={guitar}
-              addToCart={addToCart}
-              isEmpty={isEmpty}
-              totalToPay={totalToPay}
-            />
+            <Guitar key={guitar.id} guitar={guitar} addToCart={addToCart} />
           ))}
         </div>
       </main>
