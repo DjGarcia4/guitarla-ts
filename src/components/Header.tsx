@@ -1,8 +1,18 @@
-import { useCart } from "../hooks/useCart";
+import { useMemo } from "react";
+import { CartItem } from "../types";
+import { CartActions } from "../reducers/cart-reducer";
 
-const Header = () => {
-  const { cart, deleteItem, handleCant, deleteCart, isEmpty, totalToPay } =
-    useCart();
+type HeaderPops = {
+  cart: CartItem[];
+  dispatch: React.Dispatch<CartActions>;
+};
+
+const Header = ({ cart, dispatch }: HeaderPops) => {
+  const isEmpty = useMemo(() => cart.length === 0, [cart]);
+  const totalToPay = useMemo(
+    () => cart.reduce((total, item) => total + item.price * item.cant, 0),
+    [cart]
+  );
   return (
     <>
       <header className="py-5 header">
@@ -54,7 +64,12 @@ const Header = () => {
                               <td className="fw-bold">${item.price}</td>
                               <td className="flex align-items-start gap-4">
                                 <button
-                                  onClick={() => handleCant(item.id, "res")}
+                                  onClick={() =>
+                                    dispatch({
+                                      type: "handle-cant",
+                                      payload: { id: item.id, action: "res" },
+                                    })
+                                  }
                                   type="button"
                                   className="btn btn-dark"
                                 >
@@ -62,7 +77,12 @@ const Header = () => {
                                 </button>
                                 {item.cant}
                                 <button
-                                  onClick={() => handleCant(item.id, "sum")}
+                                  onClick={() =>
+                                    dispatch({
+                                      type: "handle-cant",
+                                      payload: { id: item.id, action: "sum" },
+                                    })
+                                  }
                                   type="button"
                                   className="btn btn-dark"
                                 >
@@ -74,7 +94,10 @@ const Header = () => {
                                   className="btn btn-danger"
                                   type="button"
                                   onClick={() => {
-                                    deleteItem(item.id);
+                                    dispatch({
+                                      type: "delete-item",
+                                      payload: { id: item.id },
+                                    });
                                   }}
                                 >
                                   X
@@ -90,7 +113,11 @@ const Header = () => {
                       </p>
                       <button
                         className="btn btn-dark w-100 mt-3 p-2"
-                        onClick={deleteCart}
+                        onClick={() =>
+                          dispatch({
+                            type: "delete-cart",
+                          })
+                        }
                       >
                         Vaciar Carrito
                       </button>
